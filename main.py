@@ -1,4 +1,4 @@
-import pygame
+import pygame, player
 from sys import exit as sysexit
 
 pygame.init()
