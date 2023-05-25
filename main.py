@@ -21,6 +21,7 @@ while True:
             pygame.quit()
             sysexit()
     # peepee poo poo wee wee woo woo
+    # ligma balls
     player.update()
 
     pygame.display.update()
