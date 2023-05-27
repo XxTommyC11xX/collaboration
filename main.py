@@ -20,8 +20,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sysexit()
-    # peepee poo poo wee wee woo woo
-    # ligma balls
+
     player.update()
 
     pygame.display.update()
