@@ -1,18 +1,50 @@
 import pygame as pg
-import tools
 from sys import exit as sysexit
 pg.init()
 
 # Screen
 screen = pg.display.set_mode((800,800))
 SCREEN_WIDTH,SCREEN_HEIGHT = screen.get_width(),screen.get_height()
-pg.display.set_caption("")
+pg.display.set_caption("crappy ripoff Zelda")
 MID_SCREEN = SCREEN_WIDTH / 2
+bg_img = pg.image.load("ground.png").convert_alpha()
 
 # Clock
 clock = pg.time.Clock()
 
+# Functions
+def clamp(value: int | float, min: int | float, max: int | float):
+    if value > max:
+        return max
+    elif value < min:
+        return min
+    return value
+
+def render(text: str, coords: tuple[int, int], colour, font: pg.font.Font, align: str ="center"):
+    """align defaults to center if no arguments given\n
+    Align options:\n
+    center, left, right, topleft, topright
+    """
+    screen = pg.display.get_surface()
+    surface: pg.Surface = font.render(text,False,colour)
+    if align == "center":
+        rectangle = surface.get_rect(center = coords)
+    elif align == "left":
+        rectangle = surface.get_rect(midleft = coords)
+    elif align == "right":
+        rectangle = surface.get_rect(midright = coords)
+    elif align == "topleft":
+        rectangle = surface.get_rect(topleft = coords)
+    elif align == "topright":
+        rectangle = surface.get_rect(topright = coords)
+    else:
+        raise Exception()
+    screen.blit(surface, rectangle)
+
 # Sprites
+
+link_img = pg.transform.scale(pg.image.load("link/link.jpg").convert_alpha(), (50,50))
+
 up = []
 down = []
 left = []
@@ -35,7 +67,7 @@ for sprite in range(0,5): right_attack.append(pg.transform.scale(pg.transform.fl
 
 class Player():
     def __init__(self):
-        self.image = pg.transform.scale(pg.image.load("link/link.jpg").convert_alpha(),(50,50)) 
+        self.image = pg.transform.scale(link_img,(50,50)) 
         self.rect = self.image.get_rect(center = (MID_SCREEN,MID_SCREEN))
         self.direction = "d"
         self.ani_index = 0
@@ -58,14 +90,17 @@ class Player():
             self.direction = "r"
             self.rect.x += 5
             self.ani_index += 0.2
+        else:
+            self.image = link_img
+            self.ani_index = 0
 
     def keep_in_bounds(self):
-        self.rect.x = tools.clamp(self.rect.x, 0, SCREEN_WIDTH-self.rect.width)
-        self.rect.y = tools.clamp(self.rect.y, 0, SCREEN_HEIGHT-self.rect.height)
+        self.rect.x = clamp(self.rect.x, 0, SCREEN_WIDTH-self.rect.width)
+        self.rect.y = clamp(self.rect.y, 0, SCREEN_HEIGHT-self.rect.height)
 
     def animation(self):
-        if self.ani_index >= 9: self.ani_index = 0
-        
+        if self.ani_index >= 9:
+            self.ani_index = 0
         if self.direction == "u":
             self.image = up[int(self.ani_index)]
         elif self.direction == "d":
@@ -76,8 +111,8 @@ class Player():
             self.image = right[int(self.ani_index)]
 
     def update(self):
-        self.movement()
         self.animation()
+        self.movement()
         self.keep_in_bounds()
         screen.blit(self.image,self.rect)
 
@@ -91,7 +126,7 @@ while True:
             pg.quit()
             sysexit()
 
-    screen.fill("black")
+    screen.blit(bg_img, (0,0))
     player.update()
 
     pg.display.update()
