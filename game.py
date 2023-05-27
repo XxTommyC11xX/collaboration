@@ -1,4 +1,5 @@
 import pygame as pg
+import tools
 from sys import exit as sysexit
 pg.init()
 
@@ -58,6 +59,10 @@ class Player():
             self.rect.x += 5
             self.ani_index += 0.2
 
+    def keep_in_bounds(self):
+        self.rect.x = tools.clamp(self.rect.x, 0, screen.get_width())
+        self.rect.y = tools.clamp(self.rect.y, 0, screen.get_height())
+
     def animation(self):
         if self.ani_index >= 9: self.ani_index = 0
         
@@ -73,7 +78,7 @@ class Player():
     def update(self):
         self.movement()
         self.animation()
-        
+        self.keep_in_bounds()
         screen.blit(self.image,self.rect)
 
 # Instances
