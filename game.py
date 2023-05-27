@@ -42,26 +42,26 @@ class Player():
 
     def movement(self):
         key = pg.key.get_pressed()
-        if key[pg.K_w]:
+        if key[pg.K_w] or key[pg.K_UP]:
             self.direction = "u"
             self.rect.y -= 5
             self.ani_index += 0.2
-        elif key[pg.K_s]:
+        elif key[pg.K_s] or key[pg.K_DOWN]:
             self.direction = "d"
             self.rect.y += 5
             self.ani_index += 0.2
-        elif key[pg.K_a]:
+        elif key[pg.K_a] or key[pg.K_LEFT]:
             self.direction = "l"
             self.rect.x -= 5
             self.ani_index += 0.2
-        elif key[pg.K_d]:
+        elif key[pg.K_d] or key[pg.K_RIGHT]:
             self.direction = "r"
             self.rect.x += 5
             self.ani_index += 0.2
 
     def keep_in_bounds(self):
-        self.rect.x = tools.clamp(self.rect.x, 0, screen.get_width())
-        self.rect.y = tools.clamp(self.rect.y, 0, screen.get_height())
+        self.rect.x = tools.clamp(self.rect.x, 0, SCREEN_WIDTH-self.rect.width)
+        self.rect.y = tools.clamp(self.rect.y, 0, SCREEN_HEIGHT-self.rect.height)
 
     def animation(self):
         if self.ani_index >= 9: self.ani_index = 0
@@ -95,4 +95,4 @@ while True:
     player.update()
 
     pg.display.update()
-    clock.tick(60)  
+    clock.tick(60)
